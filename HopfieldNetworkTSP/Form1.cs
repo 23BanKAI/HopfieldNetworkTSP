@@ -1,8 +1,14 @@
+using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
+
 namespace HopfieldNetworkTSP
 {
-    public partial class Form1 : Form
+    public partial class HopfieldTSP : Form
     {
-        public Form1()
+        public HopfieldTSP()
         {
             InitializeComponent();
         }
@@ -23,7 +29,7 @@ namespace HopfieldNetworkTSP
                     int rowCount = rows.Length;
 
                     int columnCount = rows[0].Split(',').Length;
-                    int[,] array = new int[rowCount, columnCount];
+                    double[,] array = new double[rowCount, columnCount];
 
                     for (int i = 0; i < rowCount; i++)
                     {
@@ -33,8 +39,26 @@ namespace HopfieldNetworkTSP
                             array[i, j] = int.Parse(columns[j]);
                         }
                     }
+                    TSPHopfieldNetwork hopfieldNetwork = new TSPHopfieldNetwork();
+                    hopfieldNetwork.HopfieldAlgorithm(array);
                 }
             }
+
+        }
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            /* OpenFileDialog fileDialog = new OpenFileDialog();
+             fileDialog.InitialDirectory = @"C:\";
+             fileDialog.Filter = "Text Files|*.txt|All Files|*.*";
+             if (fileDialog.ShowDialog() != DialogResult.OK)
+             {
+                 return;
+             }*/
+            StreamReader reader = new StreamReader("result.txt");
+            string fileContents = reader.ReadToEnd();//File.ReadAllText(fileDialog.FileName);
+            richTextBox1.Text = fileContents;
         }
     }
 }

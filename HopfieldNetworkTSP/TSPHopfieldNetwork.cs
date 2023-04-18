@@ -50,15 +50,32 @@ namespace HopfieldNetworkTSP
                     Array.Copy(path, TSPHopfieldNetwork.path, N);
                 }
             }
-
+            
             // Выводим лучший найденный путь
-            Console.Write("Best Path: ");
+            string textToFile = "Best Path: ";
             for (int i = 0; i < N; i++)
             {
-                Console.Write(TSPHopfieldNetwork.path[i] + 1 + " ");
+                textToFile += TSPHopfieldNetwork.path[i] + 1 + " ";
             }
-            Console.WriteLine();
-            Console.WriteLine("Length: " + TSPHopfieldNetwork.minLength);
+
+            textToFile += "\nLength: " + TSPHopfieldNetwork.minLength;
+            string filePath = "result.txt";
+           
+            File.WriteAllText(filePath, textToFile);
+            /*            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.Title = "Save file";
+                        saveFileDialog.Filter = "Text files (*.txt)|*.txt";
+                        saveFileDialog.DefaultExt = "txt";
+                        using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+                        {
+                            writer.Write(textToFile);
+                        }*/
+            //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            /*            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            string filePath = saveFileDialog.FileName;
+                            File.WriteAllText(filePath, textToFile);
+                        }*/
         }
         // Определяем метод для перемешивания массива
         static int[] Shuffle(int[] perm, Random rand)

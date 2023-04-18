@@ -1,6 +1,6 @@
 ﻿namespace HopfieldNetworkTSP
 {
-    partial class Form1
+    partial class HopfieldTSP
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,13 +30,15 @@
         {
             button1 = new Button();
             openFileDialog1 = new OpenFileDialog();
+            richTextBox1 = new RichTextBox();
+            button2 = new Button();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(625, 404);
+            button1.Location = new Point(12, 309);
             button1.Name = "button1";
-            button1.Size = new Size(163, 34);
+            button1.Size = new Size(299, 34);
             button1.TabIndex = 0;
             button1.Text = "Выберите файл";
             button1.UseVisualStyleBackColor = true;
@@ -46,14 +48,35 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // Form1
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(12, 12);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(299, 291);
+            richTextBox1.TabIndex = 2;
+            richTextBox1.Text = "";
+            // 
+            // button2
+            // 
+            button2.Location = new Point(12, 349);
+            button2.Name = "button2";
+            button2.Size = new Size(299, 34);
+            button2.TabIndex = 3;
+            button2.Text = "Загрузить результат";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // HopfieldTSP
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(323, 392);
+            Controls.Add(button2);
+            Controls.Add(richTextBox1);
             Controls.Add(button1);
-            Name = "Form1";
-            Text = "Form1";
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Name = "HopfieldTSP";
+            Text = "HopfieldTSP";
             ResumeLayout(false);
         }
 
@@ -61,5 +84,7 @@
 
         private Button button1;
         private OpenFileDialog openFileDialog1;
+        private RichTextBox richTextBox1;
+        private Button button2;
     }
 }
