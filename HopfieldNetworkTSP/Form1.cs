@@ -60,5 +60,10 @@ namespace HopfieldNetworkTSP
             string fileContents = reader.ReadToEnd();//File.ReadAllText(fileDialog.FileName);
             richTextBox1.Text = fileContents;
         }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

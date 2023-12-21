@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HopfieldNetworkTSP
 {
@@ -15,8 +13,7 @@ namespace HopfieldNetworkTSP
 
         public void HopfieldAlgorithm(double[,] D)
         {
-            // Инициализируем весовую матрицу
-           
+            // Инициализация весовой матрицы
             for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < N; j++)
@@ -32,52 +29,42 @@ namespace HopfieldNetworkTSP
                 perm[i] = i;
             }
             int[] input = new int[N * N];
-            int[] output = new int[N * N];
+            int[] output = new int[N];
             HopfieldNetwork hopfield = new HopfieldNetwork(N * N);
+            //hopfield.Train(W, 1000); // Вызываем метод обучения перед итерациями
             int iterations = 1000;
             Random rand = new Random();
+            string textMatrix = "Промежуточные матрицы";
             for (int i = 0; i < iterations; i++)
             {
                 input = Shuffle(perm, rand);
                 hopfield.SetInput(input);
                 hopfield.Update();
                 output = hopfield.GetOutput();
-                int[] path = Decode(output);
-                double length = GetLength(path, D);
+                int[] currentPath = Decode(output);
+                double length = GetLength(currentPath, D);
+                textMatrix += $"\nIteration {i + 1}:" + "\nPermutation: " + string.Join(" ", perm) + "\nWeights Matrix:\n" + MatrixToString(W) + "\nPath\n" + string.Join(" ", output) +
+                    "\nCurrent Path: " + string.Join(" ", currentPath) + $"\nCurrent Length: {length}\n";
                 if (length < minLength)
                 {
                     minLength = length;
-                    Array.Copy(path, TSPHopfieldNetwork.path, N);
+                    Array.Copy(currentPath, path, N);
                 }
             }
-            
+
             // Выводим лучший найденный путь
-            string textToFile = "Best Path: ";
+            string textToFile = textMatrix + "\nBest Path: ";
             for (int i = 0; i < N; i++)
             {
-                textToFile += TSPHopfieldNetwork.path[i] + 1 + " ";
+                textToFile += path[i] + 1 + " ";
             }
 
-            textToFile += "\nLength: " + TSPHopfieldNetwork.minLength;
+            textToFile += "\nLength: " + minLength;
             string filePath = "result.txt";
-           
+
             File.WriteAllText(filePath, textToFile);
-            /*            SaveFileDialog saveFileDialog = new SaveFileDialog();
-                        saveFileDialog.Title = "Save file";
-                        saveFileDialog.Filter = "Text files (*.txt)|*.txt";
-                        saveFileDialog.DefaultExt = "txt";
-                        using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
-                        {
-                            writer.Write(textToFile);
-                        }*/
-            //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            /*            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            string filePath = saveFileDialog.FileName;
-                            File.WriteAllText(filePath, textToFile);
-                        }*/
         }
-        // Определяем метод для перемешивания массива
+
         static int[] Shuffle(int[] perm, Random rand)
         {
             int[] shuffled = new int[N * N];
@@ -91,35 +78,49 @@ namespace HopfieldNetworkTSP
             }
             return shuffled;
         }
-        // Определяем метод для декодирования выходного массива
+
         static int[] Decode(int[] output)
         {
-            int[] path = new int[N];
+            int[] decodedPath = new int[N];
             bool[] used = new bool[N];
             int index = 0;
             for (int i = 0; i < N * N; i++)
             {
-                int j = output[i];
-                if (!used[j])
+                int city = output[i];
+                if (!used[city])
                 {
-                    path[index++] = j;
-                    used[j] = true;
+                    decodedPath[index++] = city;
+                    used[city] = true;
                 }
             }
-            return path;
+            return decodedPath;
         }
-        // Определяем метод для расчета длины пути
+
         static double GetLength(int[] path, double[,] D)
         {
             double length = 0;
             for (int i = 0; i < N - 1; i++)
             {
-                int j = path[i];
-                int k = path[i + 1];
-                length += D[j, k];
+                int from = path[i];
+                int to = path[i + 1];
+                length += D[from, to];
             }
             length += D[path[N - 1], path[0]];
             return length;
+        }
+
+        static string MatrixToString(double[,] matrix)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    sb.Append(matrix[i, j]).Append("\t");
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
     }
 }
